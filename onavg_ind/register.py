@@ -254,18 +254,14 @@ def nativeMNI_to_onavg(
     if not Path.exists(Path(cache_dir, f'onavg-{den}')):
         get_onavg(cache_dir)
 
-
     recon_dir = Path(hcp_dir, f"{subject}", "T1w", f"{subject}", "surf")
     subj_cache_dir = Path(cache_dir, "individual", f"{subject}").resolve()
     if not subj_cache_dir.exists():
         subj_cache_dir.mkdir(parents=True)
-    #FS_HOME = Path(os.environ['FREESURFER_HOME']).resolve()
-    #temp_dir = Path(FS_HOME, "subjects", f"{den}", "surf").resolve()
     outdir = Path(hcp_dir, f"{subject}", "MNINonLinear", f"onavg").resolve()
     if not outdir.exists():
         outdir.mkdir()
-    tplmain_dir = Path(cache_dir.parent,'tpl-onavg-main').resolve()
-
+    
     # check atlas
     den_ind = DENSITIES.index(den)
     atlas = list(ATLAS.items())[den_ind]
@@ -280,11 +276,8 @@ def nativeMNI_to_onavg(
         ]
         subprocess.check_output(cmd)
 
-
-        #not sure about  2nd last argument to -surface-resample
-        #trg_sphere = Path(cache_dir, f"tpl-onavg_hemi-{h}_den-{atlas[1]}_sphere-{atlas[0]}.surf.gii") #v3
-        #trg_sphere = Path(cache_dir, f"tpl-onavg_hemi-{h}_den-{atlas[1]}_sphere-via_fsaverage.surf.gii") #v4
-        trg_sphere = Path(tplmain_dir,f"tpl-onavg_hemi-{h}_den-{atlas[1]}_sphere.surf.gii") #v5
+        tplmain_dir = Path(cache_dir.parent,'tpl-onavg-main').resolve()
+        trg_sphere = Path(tplmain_dir,f"tpl-onavg_hemi-{h}_den-{atlas[1]}_sphere.surf.gii") 
         cmd = [
             "wb_command",
             "-surface-resample",
